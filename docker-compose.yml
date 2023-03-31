@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  database:
+    image: postgres
+    container_name: br-bank-db
+    restart: always
+    ports: 
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=br-bank
+      - POSTGRES_PASSWORD=br-bank-db
+      - POSTGRES_DB=brbankdb
+    volumes: 
+      - pgdata:/data/postgres
+
+  app: 
+    build: .
+    container_name: br-bank-api
+    ports: 
+      - 4000:4000
+    volumes: 
+      - .:/usr/app
+    links:
+      - database
+    depends_on:
+      - database
+
+volumes:
+  pgdata:
+    driver: local
